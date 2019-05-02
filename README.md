@@ -28,6 +28,9 @@ risk writing into a block allocated for another purpose.
 When you are done with a MemoryBlock you must explicitly free it. Freeing the memory block will mark
 that section of the MemoryAllocator's big, internal byte array as free for allocation again.
 
+MemoryBlock objects are pooled internally, and thus reused. That is done to avoid creating a new MemoryBlock
+each time a byte block is allocated. Otherwise you would still put a lot of pressure on the garbage collector.
+
 
 # Advantages Over Traditional Memory Allocation
 Allocating byte blocks from a bigger, shared byte array can, in some cases, provide several advantages
@@ -54,7 +57,9 @@ Since you cannot explicitly free objects in Java, nor trigger the garbage collec
 with normally allocated byte arrays.
 
 
-
-
+## Checking if Enough Memory is Free Before Allocation
+You can check if it possible to allocate the desired memory before actually doing so. If not, you could e.g.
+reject an incoming request, or simply not read any more data from inbound sockets etc., in order to provide
+backpressure back up your request chain. This is not possible with the Java "new" command either.
 
 
