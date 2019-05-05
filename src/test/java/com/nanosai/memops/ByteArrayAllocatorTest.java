@@ -13,11 +13,13 @@ public class ByteArrayAllocatorTest {
         int offset2 = allocator.allocate(16);
         int offset3 = allocator.allocate(16);
         int offset4 = allocator.allocate(16);
+        int offset5 = allocator.allocate(16);
 
-        allocator.freeAndDefragment(offset1,offset1 + 16);
         allocator.freeAndDefragment(offset2,offset2 + 16);
         allocator.freeAndDefragment(offset4,offset4 + 16);
         allocator.freeAndDefragment(offset3,offset3 + 16);
+        allocator.freeAndDefragment(offset5,offset5 + 16);
+        allocator.freeAndDefragment(offset1,offset1 + 16);
 
 
 
