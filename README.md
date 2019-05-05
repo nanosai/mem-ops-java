@@ -32,7 +32,7 @@ MemoryBlock objects are pooled internally, and thus reused. That is done to avoi
 each time a byte block is allocated. Otherwise you would still put a lot of pressure on the garbage collector.
 
 
-# Advantages Over Traditional Memory Allocation
+# Advantages Over Standard Java Byte Array Instantiation
 Allocating byte blocks from a bigger, shared byte array can, in some cases, provide several advantages
 over allocating byte arrays via the Java "new" command. I will explain these advantages in the following sections:
 
@@ -63,3 +63,4 @@ reject an incoming request, or simply not read any more data from inbound socket
 backpressure back up your request chain. This is not possible with the Java "new" command either.
 
 
+##Freeing Unused Bytes of a Block

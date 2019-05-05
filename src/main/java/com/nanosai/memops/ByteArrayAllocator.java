@@ -3,66 +3,44 @@ package com.nanosai.memops;
 import java.util.Arrays;
 
 /**
- * The MemoryAllocator class is capable of allocating (and freeing) smaller sections of a larger byte array.
- * The underlying larger byte array is passed to the MemoryAllocator when it is instantiated, along with
+ * The ByteArrayAllocator class is capable of allocating (and freeing) smaller sections of a larger byte array.
+ * The underlying larger byte array is passed to the ByteArrayAllocator when it is instantiated, along with
  * an array of longs which is used to mark which parts of the internal byte array that is free.
  *
  * When a block (section) of the bigger array is allocated, it is allocated from the first free block that
  * has the same or larger size as the block requested. In other words, if you request a block of 1024 bytes,
  * those bytes will be allocated from the first free section that is 1024 bytes or larger.
  *
- * The length of the array of longs determines how many free blocks the MemoryAllocator can hold internally,
+ * The length of the array of longs determines how many free blocks the ByteArrayAllocator can hold internally,
  * before it needs to defragment the free blocks. Defragmenting the free blocks means joining two or more
  * adjacent free blocks into a single, bigger free block.
  */
-public class MemoryAllocator {
+public class ByteArrayAllocator {
 
-    private static long TO_AND_MASK = (long) Math.pow(2, 32)-1L;
+    private static int  FREE_BLOCK_ARRAY_SIZE_INCREMENT = 16;
+    private static long FROM_AND_MASK = (long) 0xFFFFFFFF00000000L;
+    private static long TO_AND_MASK   = (long) 0x00000000FFFFFFFFL;
 
-    public  byte[] data = null;              //public because we copy data into it from MemoryBlock's and other places.
-    private long[] freeBlocks = null;
+    private byte[] data = null;
+    private long[] freeBlocks = new long[FREE_BLOCK_ARRAY_SIZE_INCREMENT];
     //private long[] usedBlocks = null;
 
     private int freeBlockCount = 0;
     //private int nextUsedBlockIndex = 0;
     private int freeBlockCountDefragLimit = 10000;
 
-    //todo make pooled memory block count configurable
-    private MemoryBlock[] pooledMemoryBlocks = new MemoryBlock[1024 * 1024]; //max 1M messages pooled.
-    private int pooledMessageCount = 0;
-
-    private IMemoryBlockFactory memoryBlockFactory = null;
-
-
-    public MemoryAllocator(byte[] data, long[] freeBlocks, IMemoryBlockFactory memoryBlockFactory) {
-        init(data, freeBlocks, memoryBlockFactory);
+    public ByteArrayAllocator(byte[] data) {
+        init(data);
     }
 
-    public MemoryAllocator(byte[] data, long[] freeBlocks) {
-        init(data, freeBlocks, (allocator) -> { return new MemoryBlock(allocator); });
-    }
-
-
-
-    private void init(byte[] data, long[] freeBlocks, IMemoryBlockFactory factory) {
+    private void init(byte[] data) {
         this.data = data;
-        this.freeBlocks = freeBlocks;
-        this.memoryBlockFactory = factory;
-
         free(0, data.length);
     }
 
-    public MemoryBlock getMemoryBlock() {
-        if(this.pooledMessageCount > 0){
-            this.pooledMessageCount--;
-            return this.pooledMemoryBlocks[this.pooledMessageCount];
-        }
-        return this.memoryBlockFactory.createMemoryBlock(this);
-
+    public byte[] getData() {
+        return this.data;
     }
-
-
-
 
     public int capacity() {
         return this.data.length;
@@ -138,17 +116,60 @@ public class MemoryAllocator {
         return -1;
     }
 
-    public void free(MemoryBlock memoryBlock) {
-        //pool message if space
-        if(this.pooledMessageCount < this.pooledMemoryBlocks.length){
-            this.pooledMemoryBlocks[this.pooledMessageCount] = memoryBlock;
-            this.pooledMessageCount++;
-        }
+    public void free(int from, int to){
+        freeAndDefragment(from, to);
 
-        free(memoryBlock.startIndex, memoryBlock.endIndex);
+        if(freeBlockCount == freeBlockCountDefragLimit){
+            defragment();
+        }
     }
 
-    public void free(int from, int to){
+    protected void freeAndDefragment(long from, long to) {
+        long freeBlockDescriptor = ((from << 32) + to);
+
+        for(int i=0; i<this.freeBlockCount; i++){
+            if(freeBlockDescriptor < this.freeBlocks[i]){
+                //insert the free block here - at index i
+                boolean mergeWithPreviousBlock = i > 0 && (from == (int) (this.freeBlocks[i-1]  & TO_AND_MASK));
+                boolean mergeWithNextBlock     =          (to   == (int) (this.freeBlocks[i]   >> 32));
+
+                if(mergeWithPreviousBlock && mergeWithNextBlock) {
+                    this.freeBlocks[i-1] = (this.freeBlocks[i-1] & FROM_AND_MASK) | (this.freeBlocks[i]   & TO_AND_MASK);
+                    int length = this.freeBlockCount - i -1;
+                    System.arraycopy(this.freeBlocks, i+1, this.freeBlocks, i, this.freeBlockCount - i -1);
+                    this.freeBlockCount--;
+                    return;
+                }
+                if(mergeWithPreviousBlock){
+                    this.freeBlocks[i-1] = (this.freeBlocks[i-1] & FROM_AND_MASK) | to;
+                    return;
+                }
+                if(mergeWithNextBlock){
+                    this.freeBlocks[i] = (from << 32) | (this.freeBlocks[i] & TO_AND_MASK);
+                    return;
+                }
+
+                //new free block is not adjacent to either previous nor next block, so insert it here.
+                int length = this.freeBlockCount - i;
+                System.arraycopy(this.freeBlocks, i, this.freeBlocks, i+1, length);
+                this.freeBlocks[i] = freeBlockDescriptor;
+                this.freeBlockCount++;
+                return;
+            }
+        }
+
+        //no place found to insert the free block, so append it at the end instead.
+        if(this.freeBlockCount >= this.freeBlocks.length) {
+            //expand array
+            long[] newFreeBlocks = new long[this.freeBlocks.length + FREE_BLOCK_ARRAY_SIZE_INCREMENT];
+            System.arraycopy(this.freeBlocks, 0, newFreeBlocks, 0, this.freeBlocks.length);
+            this.freeBlocks = newFreeBlocks;
+        }
+        this.freeBlocks[freeBlockCount] = freeBlockDescriptor;
+        freeBlockCount++;
+    }
+
+    protected void appendFreeBlock(int from, int to) {
         long freeBlockDescriptor = from;
         freeBlockDescriptor <<= 32;
 
@@ -156,11 +177,8 @@ public class MemoryAllocator {
 
         this.freeBlocks[freeBlockCount] = freeBlockDescriptor;
         freeBlockCount++;
-
-        if(freeBlockCount == freeBlockCountDefragLimit){
-            defragment();
-        }
     }
+
 
     public void defragment() {
         //sort
