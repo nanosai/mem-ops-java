@@ -27,7 +27,7 @@ public class ByteArrayAllocator {
 
     private int freeBlockCount = 0;
     //private int nextUsedBlockIndex = 0;
-    private int freeBlockCountDefragLimit = 10000;
+    //private int freeBlockCountDefragLimit = 10000;
 
     public ByteArrayAllocator(byte[] data) {
         init(data);
@@ -35,7 +35,7 @@ public class ByteArrayAllocator {
 
     private void init(byte[] data) {
         this.data = data;
-        free(0, data.length);
+        freeAndDefragment(0, data.length);
     }
 
     public byte[] getData() {
@@ -65,6 +65,7 @@ public class ByteArrayAllocator {
         return freeCapacity;
     }
 
+    /*
     public int freeBlockCountDefragLimit() {
         return freeBlockCountDefragLimit;
     }
@@ -72,6 +73,7 @@ public class ByteArrayAllocator {
     public void freeBlockCountDefragLimit(int freeBlockCountDefragLimit) {
         this.freeBlockCountDefragLimit = freeBlockCountDefragLimit;
     }
+    */
 
     /**
      * This method allocates a section of the internal byte array from the first free block of that array found.
@@ -116,6 +118,7 @@ public class ByteArrayAllocator {
         return -1;
     }
 
+    /*
     public void free(int from, int to){
         freeAndDefragment(from, to);
 
@@ -123,8 +126,9 @@ public class ByteArrayAllocator {
             defragment();
         }
     }
+    */
 
-    protected void freeAndDefragment(long from, long to) {
+    public void freeAndDefragment(long from, long to) {
         long freeBlockDescriptor = ((from << 32) + to);
 
         for(int i=0; i<this.freeBlockCount; i++){
@@ -169,6 +173,7 @@ public class ByteArrayAllocator {
         freeBlockCount++;
     }
 
+    /*
     protected void appendFreeBlock(int from, int to) {
         long freeBlockDescriptor = from;
         freeBlockDescriptor <<= 32;
@@ -228,5 +233,6 @@ public class ByteArrayAllocator {
         }
         this.freeBlockCount = newIndex;
     }
+    */
 
 }
