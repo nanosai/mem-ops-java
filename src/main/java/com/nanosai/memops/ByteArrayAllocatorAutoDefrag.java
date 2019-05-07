@@ -1,21 +1,19 @@
 package com.nanosai.memops;
 
-import java.util.Arrays;
-
 /**
- * The ByteArrayAllocator class is capable of allocating (and freeing) smaller sections of a larger byte array.
- * The underlying larger byte array is passed to the ByteArrayAllocator when it is instantiated, along with
+ * The ByteArrayAllocatorAutoDefrag class is capable of allocating (and freeing) smaller sections of a larger byte array.
+ * The underlying larger byte array is passed to the ByteArrayAllocatorAutoDefrag when it is instantiated, along with
  * an array of longs which is used to mark which parts of the internal byte array that is free.
  *
  * When a block (section) of the bigger array is allocated, it is allocated from the first free block that
  * has the same or larger size as the block requested. In other words, if you request a block of 1024 bytes,
  * those bytes will be allocated from the first free section that is 1024 bytes or larger.
  *
- * The length of the array of longs determines how many free blocks the ByteArrayAllocator can hold internally,
+ * The length of the array of longs determines how many free blocks the ByteArrayAllocatorAutoDefrag can hold internally,
  * before it needs to defragment the free blocks. Defragmenting the free blocks means joining two or more
  * adjacent free blocks into a single, bigger free block.
  */
-public class ByteArrayAllocator {
+public class ByteArrayAllocatorAutoDefrag {
 
     private static int  FREE_BLOCK_ARRAY_SIZE_INCREMENT = 16;
     private static long FROM_AND_MASK = (long) 0xFFFFFFFF00000000L;
@@ -23,19 +21,16 @@ public class ByteArrayAllocator {
 
     private byte[] data = null;
     private long[] freeBlocks = new long[FREE_BLOCK_ARRAY_SIZE_INCREMENT];
-    //private long[] usedBlocks = null;
 
     private int freeBlockCount = 0;
-    //private int nextUsedBlockIndex = 0;
-    //private int freeBlockCountDefragLimit = 10000;
 
-    public ByteArrayAllocator(byte[] data) {
+    public ByteArrayAllocatorAutoDefrag(byte[] data) {
         init(data);
     }
 
     private void init(byte[] data) {
         this.data = data;
-        freeAndDefragment(0, data.length);
+        free(0, data.length);
     }
 
     public byte[] getData() {
@@ -64,16 +59,6 @@ public class ByteArrayAllocator {
 
         return freeCapacity;
     }
-
-    /*
-    public int freeBlockCountDefragLimit() {
-        return freeBlockCountDefragLimit;
-    }
-
-    public void freeBlockCountDefragLimit(int freeBlockCountDefragLimit) {
-        this.freeBlockCountDefragLimit = freeBlockCountDefragLimit;
-    }
-    */
 
     /**
      * This method allocates a section of the internal byte array from the first free block of that array found.
@@ -118,17 +103,8 @@ public class ByteArrayAllocator {
         return -1;
     }
 
-    /*
-    public void free(int from, int to){
-        freeAndDefragment(from, to);
 
-        if(freeBlockCount == freeBlockCountDefragLimit){
-            defragment();
-        }
-    }
-    */
-
-    public void freeAndDefragment(long from, long to) {
+    public void free(long from, long to) {
         long freeBlockDescriptor = ((from << 32) + to);
 
         for(int i=0; i<this.freeBlockCount; i++){
@@ -173,66 +149,5 @@ public class ByteArrayAllocator {
         freeBlockCount++;
     }
 
-    /*
-    protected void appendFreeBlock(int from, int to) {
-        long freeBlockDescriptor = from;
-        freeBlockDescriptor <<= 32;
-
-        freeBlockDescriptor += to;
-
-        this.freeBlocks[freeBlockCount] = freeBlockDescriptor;
-        freeBlockCount++;
-    }
-
-
-    public void defragment() {
-        //sort
-        Arrays.sort(this.freeBlocks, 0, this.freeBlockCount);
-
-        //merge
-        int newIndex = 0;
-
-        for(int i=0; i < freeBlockCount;){
-            long from = this.freeBlocks[i];
-            from >>=32;
-
-            long to   = this.freeBlocks[i];
-            to &= TO_AND_MASK;
-
-            int nextIndex  = i + 1;
-
-            long nextFrom = this.freeBlocks[nextIndex];
-            nextFrom >>=32;
-
-            long nextTo   = this.freeBlocks[nextIndex];
-            nextTo &= TO_AND_MASK;
-
-            while(to == nextFrom ){
-                to = nextTo;      //todo this can be moved to after while loop?
-                nextIndex++;
-                if(nextIndex == this.freeBlockCount){
-                    break;
-                }
-
-                nextFrom   = this.freeBlocks[nextIndex];
-                nextFrom >>=32;
-
-                nextTo     = this.freeBlocks[nextIndex];
-                nextTo    &= TO_AND_MASK;
-            }
-
-            i = nextIndex;
-
-            long newBlockDescriptor = from;
-            newBlockDescriptor <<= 32;
-
-            newBlockDescriptor += to;
-
-            this.freeBlocks[newIndex] = newBlockDescriptor;
-            newIndex++;
-        }
-        this.freeBlockCount = newIndex;
-    }
-    */
 
 }
