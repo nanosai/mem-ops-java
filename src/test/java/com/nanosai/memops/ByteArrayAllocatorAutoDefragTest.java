@@ -10,6 +10,7 @@ public class ByteArrayAllocatorAutoDefragTest {
         ByteArrayAllocatorAutoDefrag allocator = new ByteArrayAllocatorAutoDefrag(new byte[1024]);
 
         int offset1 = allocator.allocate(16);
+
         int offset2 = allocator.allocate(16);
         int offset3 = allocator.allocate(16);
         int offset4 = allocator.allocate(16);
