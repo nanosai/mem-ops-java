@@ -1,15 +1,15 @@
-package com.nanosai.memops;
+package com.nanosai.memops.bytes;
 
 /**
- * The ByteArrayAllocatorAutoDefrag class is capable of allocating (and freeing) smaller sections of a larger byte array.
- * The underlying larger byte array is passed to the ByteArrayAllocatorAutoDefrag when it is instantiated.
+ * The BytesAllocatorAutoDefrag class is capable of allocating (and freeing) smaller sections of a larger byte array.
+ * The underlying larger byte array is passed to the BytesAllocatorAutoDefrag when it is instantiated.
  *
  * When a block (section) of the bigger array is allocated, it is allocated from the first free block that
  * has the same or larger size as the block requested. In other words, if you request a block of 1024 bytes,
  * those bytes will be allocated from the first free section that is 1024 bytes or larger.
  *
  * */
-public class ByteArrayAllocatorAutoDefrag {
+public class BytesAllocatorAutoDefrag {
 
     private static int  FREE_BLOCK_ARRAY_SIZE_INCREMENT = 16;
     private static long FROM_AND_MASK = (long) 0xFFFFFFFF00000000L;
@@ -20,7 +20,7 @@ public class ByteArrayAllocatorAutoDefrag {
 
     private int freeBlockCount = 0;
 
-    public ByteArrayAllocatorAutoDefrag(byte[] data) {
+    public BytesAllocatorAutoDefrag(byte[] data) {
         init(data);
     }
 
@@ -61,12 +61,12 @@ public class ByteArrayAllocatorAutoDefrag {
      * You should not call this method directly. Rather, obtain a MemoryBlock via getMemoryBlock() and call
      * MemoryBlock.allocate(size) on that instance.
      *
-     * If a block could be allocated of the requested size, the offset into the underlying byte array of
+     * If a block could be allocated of the requested size, the startIndex into the underlying byte array of
      * that block is returned by this method. If no free block was large enough to allocate the requested
      * block, -1 is returned.
      *
      * @param blockSize The requested number of bytes to allocate
-     * @return The offset into the underlying byte array of the allocated block (of the requested size),
+     * @return The startIndex into the underlying byte array of the allocated block (of the requested size),
      * or -1 if the block could not be allocated.
      */
     protected int allocate(int blockSize){

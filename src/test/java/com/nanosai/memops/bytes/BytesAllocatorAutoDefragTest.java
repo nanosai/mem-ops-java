@@ -1,13 +1,14 @@
-package com.nanosai.memops;
+package com.nanosai.memops.bytes;
 
+import com.nanosai.memops.bytes.BytesAllocatorAutoDefrag;
 import org.junit.jupiter.api.Test;
 
-public class ByteArrayAllocatorAutoDefragTest {
+public class BytesAllocatorAutoDefragTest {
 
 
     @Test
     public void test() {
-        ByteArrayAllocatorAutoDefrag allocator = new ByteArrayAllocatorAutoDefrag(new byte[1024]);
+        BytesAllocatorAutoDefrag allocator = new BytesAllocatorAutoDefrag(new byte[1024]);
 
         int offset1 = allocator.allocate(16);
 

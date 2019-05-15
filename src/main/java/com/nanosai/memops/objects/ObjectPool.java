@@ -1,4 +1,4 @@
-package com.nanosai.memops;
+package com.nanosai.memops.objects;
 
 import java.util.Stack;
 

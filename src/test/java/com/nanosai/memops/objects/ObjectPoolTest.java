@@ -1,5 +1,10 @@
-package com.nanosai.memops;
+package com.nanosai.memops.objects;
 
+import com.nanosai.memops.bytes.BytesAllocatorAutoDefrag;
+import com.nanosai.memops.objects.Bytes;
+import com.nanosai.memops.objects.BytesFactory;
+import com.nanosai.memops.objects.IObjectFactory;
+import com.nanosai.memops.objects.ObjectPool;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,6 +55,28 @@ public class ObjectPoolTest {
 
         String instance9 = objectPool.instance();
         assertNull(instance9);  //null, because object pool only has a capacity of 8 instances.
+    }
+
+    @Test
+    public void testByteArrayBlock() {
+        BytesAllocatorAutoDefrag allocator = new BytesAllocatorAutoDefrag(new byte[1024]);
+        ObjectPool<Bytes> objectPool = new ObjectPool<>(8, new BytesFactory(allocator) );
+
+        Bytes bytes1 = objectPool.instance();
+        Bytes bytes2 = objectPool.instance();
+
+        assertNotSame(bytes1, bytes2);
+
+        assertEquals(0, bytes1.startIndex);
+        assertEquals(0, bytes1.length);
+
+        assertTrue(bytes1.allocate(16));
+        assertEquals(0, bytes1.startIndex);
+        assertEquals(16, bytes1.length);
+
+        assertTrue(bytes2.allocate(16));
+        assertEquals(16, bytes2.startIndex);
+        assertEquals(16, bytes2.length);
 
     }
 }
