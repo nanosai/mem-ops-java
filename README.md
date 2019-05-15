@@ -15,27 +15,22 @@ Mem Ops in more detail, we have one here:
 
 # The Basics
 
-Mem Ops has two core classes:
+Mem Ops has two core packages:
 
- - MemoryAllocator
- - MemoryBlock
+ - com.nanosai.memops.bytes
+ - com.nanosai.memops.objects
 
-The MemoryAllocator allocates a single, big byte array which can then be reallocated by the MemoryAllocator
-into smaller memory blocks. Each memory block is represented by a MemoryBlock object.
+The com.nanosai.memops.bytes package contains classes for allocating bytes (sections of a bigger byte array). Using these
+classes you can allocate a single, big byte array from which you can allocate smaller blocks. That way you only
+ever allocate the bigger byte array, even though you subdivide it and use the smaller blocks individually.
+When you are done with a byte block, you must explicitly free it again. When
+a block is freed it can be reallocated for use again.
 
-When your application needs a byte array, instead of creating a new byte array using
+The com.nanosai.memops.objects package contains classes for allocating (pooling) objects. These can be any object
+you need. The package comes with some built-in classes for Bytes - which represents a block of bytes in a shared
+byte array. Thus, a Bytes instance contains a byte[] array reference, a start index, end index etc. which is used
+to identify the byte block in the big byte array.
 
-    new byte[size]
-
-your application can obtain a byte array from the MemoryAllocator. Actually, what you get is a block of
-its big, internal byte array which you can use. Thus, if you write beyond the end of your block, you
-risk writing into a block allocated for another purpose.
-
-When you are done with a MemoryBlock you must explicitly free it. Freeing the memory block will mark
-that section of the MemoryAllocator's big, internal byte array as free for allocation again.
-
-MemoryBlock objects are pooled internally, and thus reused. That is done to avoid creating a new MemoryBlock
-each time a byte block is allocated. Otherwise you would still put a lot of pressure on the garbage collector.
 
 
 # Advantages Over Standard Java Byte Array Instantiation
@@ -53,7 +48,7 @@ that may put pressure on the garbage collector and result in uneven performance 
 
 
 ## Defragmentation at Your Convenience
-When memory blocks are explicitly freed, the MemoryAllocator can either defragment
+When memory blocks are explicitly freed, the byte allocators can either defragment
 the internal byte array immediately, or at a later time when it is convenient for you. This way you get to choose
 when defragmentation (garbage collection) takes place. You can either garbage collect immediately when the
 memory block is freed, thus paying the price of defragmentation immediately (and just for that memory block),
