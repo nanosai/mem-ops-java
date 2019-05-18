@@ -5,15 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nanosai</groupId>
-    <artifactId>grid-ops</artifactId>
-    <version>0.8.0</version>
+    <artifactId>mem-ops</artifactId>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
 
-    <name>Grid Ops for Java</name>
-    <description>Grid Ops for Java is the swiss army knife of distributed systems. Grid Ops implements
-    the IAP protocol and ION format in Java and adds several nice utilities on top.</description>
+    <name>Mem Ops for Java</name>
+    <description>
+        Mem Ops for Java is an open source toolkit for memory management for use in applications that require
+        steady state memory consumption, meaning a constant amount of memory used, and as little garbage collection
+        as possible.
+    </description>
 
-    <url>https://github.com/nanosai/grid-ops-java</url>
+    <url>https://github.com/nanosai/mem-ops-java</url>
 
     <licenses>
         <license>
@@ -32,9 +35,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/nanosai/grid-ops-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com:nanosai/grid-ops-java.git</developerConnection>
-        <url>http://github.com/nanosai/grid-ops-java/tree/master</url>
+        <connection>scm:git:git://github.com/nanosai/mem-ops-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com:nanosai/mem-ops-java.git</developerConnection>
+        <url>http://github.com/nanosai/mem-ops-java/tree/master</url>
     </scm>
 
 
