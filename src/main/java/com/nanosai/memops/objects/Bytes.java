@@ -24,6 +24,11 @@ public class Bytes {
         this.data               = byteArrayAllocator.getData();
     }
 
+    public int lengthWritten() {
+        return this.writeIndex - this.startIndex;
+    }
+
+
     public boolean allocate(int length) {
         int startIndex = this.byteArrayAllocator.allocate(length);
         if(startIndex == -1) {

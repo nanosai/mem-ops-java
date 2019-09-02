@@ -23,6 +23,8 @@ public class ObjectPoolTest {
             }
         };
 
+        IObjectFactory stringFactory2 = () -> "" + System.currentTimeMillis();
+
         ObjectPool<String> objectPool = new ObjectPool<String>(8, stringFactory);
         assertEquals(8, objectPool.capacity());
 
