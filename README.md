@@ -92,6 +92,6 @@ backpressure back up your request chain. This is not possible with the Java "new
 
 | Version | Java Version | Change |
 |---------|--------------|--------|
-|         |              |        |
+| 0.5.1   | Java 8       | First release |
 
 
