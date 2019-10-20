@@ -1,6 +1,10 @@
 # Mem Ops for Java
 
 [Introduction](#introduction)
+[Mem Ops Tutorial](#tutorial)
+[The Basics](#basics)
+[Advantages Over Standard Java Byte Array Instantiation](#advantages)
+[Version History](#version-history)
 
 
 <a name="introduction"/>
@@ -15,11 +19,17 @@ any use case that requires stable memory consumption.
 
 Mem Ops is developed by [https://nanosai.com](https://nanosai.com) .
 
+
+<a name="tutorial">
+
 # Mem Ops Tutorial
 This README.md page introduces what Mem Ops is, but if you are looking for a tutorial explaining how to use
 Mem Ops in more detail, we have one here:
 
 [http://tutorials.jenkov.com/mem-ops/index.html](http://tutorials.jenkov.com/mem-ops/index.html)
+
+
+<a name="basics">
 
 # The Basics
 
@@ -40,6 +50,7 @@ byte array. Thus, a Bytes instance contains a byte[] array reference, a start in
 to identify the byte block in the big byte array.
 
 
+<a name="advantages">
 
 # Advantages Over Standard Java Byte Array Instantiation
 Allocating byte blocks from a bigger, shared byte array can, in some cases, provide several advantages
@@ -75,7 +86,9 @@ backpressure back up your request chain. This is not possible with the Java "new
 ##Freeing Unused Bytes of a Block
 
 
-## Version History
+<a name="version-history">
+
+# Version History
 
 | Version | Java Version | Change |
 |---------|--------------|--------|
