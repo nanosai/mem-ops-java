@@ -4,6 +4,7 @@
 - [Mem Ops Tutorial](#tutorial)
 - [The Basics](#basics)
 - [Advantages Over Standard Java Byte Array Instantiation](#advantages)
+- [Maven Dependency](#maven-dependency)
 - [Version History](#version-history)
 
 
@@ -84,6 +85,23 @@ backpressure back up your request chain. This is not possible with the Java "new
 
 
 ##Freeing Unused Bytes of a Block
+
+
+
+<a name="maven-dependency"></a>
+
+# Maven Dependency
+
+If you want to use Mem Ops with Maven, the Maven dependency for Mem Ops looks like this:
+
+    <dependency>
+        <groupId>com.nanosai</groupId>
+        <artifactId>mem-ops</artifactId>
+        <version>0.5.1</version>
+    </dependency>
+
+Remember to substitute the version with the version of Mem Ops you want to use. See the Mem Ops version history in
+the next section.
 
 
 <a name="version-history"></a>
