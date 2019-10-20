@@ -1,8 +1,10 @@
 # Mem Ops for Java
 
+[Introduction](#introduction)
 
 
-
+<a name="introduction"/>
+# Introduction
 Mem Ops for Java is a Java memory manager / allocator for use in systems requiring steady state memory consumption
 (as little garbage collection as possible).
 
@@ -15,7 +17,7 @@ Mem Ops is developed by [https://nanosai.com](https://nanosai.com) .
 This README.md page introduces what Mem Ops is, but if you are looking for a tutorial explaining how to use
 Mem Ops in more detail, we have one here:
 
-[http://tutorials.jenkov.com/mem-ops/index.html]
+[http://tutorials.jenkov.com/mem-ops/index.html](http://tutorials.jenkov.com/mem-ops/index.html)
 
 # The Basics
 
