@@ -1,10 +1,10 @@
 # Mem Ops for Java
 
-[Introduction](#introduction)
-[Mem Ops Tutorial](#tutorial)
-[The Basics](#basics)
-[Advantages Over Standard Java Byte Array Instantiation](#advantages)
-[Version History](#version-history)
+- [Introduction](#introduction)
+- [Mem Ops Tutorial](#tutorial)
+- [The Basics](#basics)
+- [Advantages Over Standard Java Byte Array Instantiation](#advantages)
+- [Version History](#version-history)
 
 
 <a name="introduction"/>
