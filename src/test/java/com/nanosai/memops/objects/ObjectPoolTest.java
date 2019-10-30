@@ -16,14 +16,14 @@ public class ObjectPoolTest {
         IObjectFactory<String> stringFactory = new IObjectFactory<String>() {
             int instanceNo = 0;
             @Override
-            public String instance() {
+            public String instance(ObjectPool<String> objectPool) {
                 String value = "" + instanceNo;
                 instanceNo++;
                 return value;
             }
         };
 
-        IObjectFactory stringFactory2 = () -> "" + System.currentTimeMillis();
+        IObjectFactory stringFactory2 = (objectPool) -> "" + System.currentTimeMillis();
 
         ObjectPool<String> objectPool = new ObjectPool<String>(8, stringFactory);
         assertEquals(8, objectPool.capacity());

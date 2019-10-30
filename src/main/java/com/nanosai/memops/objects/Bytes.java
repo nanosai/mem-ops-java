@@ -18,10 +18,12 @@ public class Bytes {
 
 
     public BytesAllocatorAutoDefrag byteArrayAllocator = null;
+    public ObjectPool objectPool = null;
 
-    public void init(BytesAllocatorAutoDefrag byteArrayAllocator){
+    public void init(BytesAllocatorAutoDefrag byteArrayAllocator, ObjectPool<Bytes> objectPool){
         this.byteArrayAllocator = byteArrayAllocator;
         this.data               = byteArrayAllocator.getData();
+        this.objectPool         = objectPool;
     }
 
     public int lengthWritten() {
@@ -42,6 +44,7 @@ public class Bytes {
 
     public void free() {
         this.byteArrayAllocator.free(this.startIndex, this.startIndex + this.length);
+        this.objectPool.free(this);
     }
 
 

@@ -44,6 +44,7 @@ public class BytesAllocatorAutoDefrag extends BytesAllocatorBase implements IByt
                 }
 
                 //new free block is not adjacent to either previous nor next block, so insert it here.
+                //todo check if this can result in a freeBlocks IndexOutOfBoundsException - if there are more free blocks than freeBlocks has space for.
                 int length = this.freeBlockCount - i;
                 System.arraycopy(this.freeBlocks, i, this.freeBlocks, i+1, length);
                 this.freeBlocks[i] = freeBlockDescriptor;
@@ -53,6 +54,7 @@ public class BytesAllocatorAutoDefrag extends BytesAllocatorBase implements IByt
         }
 
         //no place found to insert the free block, so append it at the end instead.
+        //todo maybe extract if-statement into an "expandFreeBlocksArrayIfNecessary() method?
         if(this.freeBlockCount >= this.freeBlocks.length) {
             //expand array
             long[] newFreeBlocks = new long[this.freeBlocks.length + FREE_BLOCK_ARRAY_SIZE_INCREMENT];

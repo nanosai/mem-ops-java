@@ -11,9 +11,9 @@ public class BytesFactory implements IObjectFactory<Bytes> {
     }
 
     @Override
-    public Bytes instance() {
+    public Bytes instance(ObjectPool<Bytes> objectPool) {
         Bytes block = new Bytes();
-        block.init(this.bytesAllocatorAutoDefrag);
+        block.init(this.bytesAllocatorAutoDefrag, objectPool);
         return block;
     }
 }

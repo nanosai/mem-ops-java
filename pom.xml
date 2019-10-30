@@ -6,7 +6,7 @@
 
     <groupId>com.nanosai</groupId>
     <artifactId>mem-ops</artifactId>
-    <version>0.5.1</version>
+    <version>0.6.0</version>
     <packaging>jar</packaging>
 
     <name>Mem Ops for Java</name>

@@ -9,6 +9,10 @@ public class ObjectPool<T> implements IObjectPool<T> {
     private IObjectFactory<T> objectFactory = null;
     private Stack<T>          stack         = new Stack<T>();
 
+    public ObjectPool(int capacity) {
+        this.capacity = capacity;
+    }
+
     public ObjectPool(int capacity, IObjectFactory<T> objectFactory){
         this.capacity      = capacity;
         this.objectFactory = objectFactory;
@@ -18,9 +22,17 @@ public class ObjectPool<T> implements IObjectPool<T> {
         return this.instances;
     }
 
+    public int instancesFree() {
+        return this.stack.size();
+    }
+
     @Override
     public int capacity() {
         return this.capacity;
+    }
+
+    public void setObjectFactory(IObjectFactory<T> objectFactory){
+        this.objectFactory = objectFactory;
     }
 
     @Override
@@ -32,7 +44,7 @@ public class ObjectPool<T> implements IObjectPool<T> {
             return null;
         }
         this.instances++;
-        return this.objectFactory.instance();
+        return this.objectFactory.instance(this);
     }
 
     public void free(T instance){
