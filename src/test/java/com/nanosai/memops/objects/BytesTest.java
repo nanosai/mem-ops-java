@@ -33,8 +33,9 @@ public class BytesTest {
     public void testBytesAllocation() {
         BytesAllocatorAutoDefrag byteArrayAllocator = new BytesAllocatorAutoDefrag(new byte[1024 * 1024]);
 
-        ObjectPool<Bytes> objectPool = new ObjectPool<Bytes>(3);
-        objectPool.setObjectFactory(new BytesFactory(byteArrayAllocator));
+        BytesFactory bytesFactory = new BytesFactory(byteArrayAllocator);
+
+        ObjectPool<Bytes> objectPool = new ObjectPool<Bytes>(3,bytesFactory);
 
         assertEquals(0, objectPool.instancesFree());
         assertEquals(0, objectPool.instances());

@@ -1,12 +1,12 @@
 package com.nanosai.memops.objects;
 
-import com.nanosai.memops.bytes.BytesAllocatorAutoDefrag;
+import com.nanosai.memops.bytes.IBytesAllocator;
 
 public class BytesFactory implements IObjectFactory<Bytes> {
 
-    private BytesAllocatorAutoDefrag bytesAllocatorAutoDefrag = null;
+    private IBytesAllocator bytesAllocatorAutoDefrag = null;
 
-    public BytesFactory(BytesAllocatorAutoDefrag allocator){
+    public BytesFactory(IBytesAllocator allocator){
         this.bytesAllocatorAutoDefrag = allocator;
     }
 

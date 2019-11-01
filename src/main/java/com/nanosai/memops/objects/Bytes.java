@@ -1,6 +1,6 @@
 package com.nanosai.memops.objects;
 
-import com.nanosai.memops.bytes.BytesAllocatorAutoDefrag;
+import com.nanosai.memops.bytes.IBytesAllocator;
 
 /**
  * A smaller block of a bigger byte array, starting from startIndex and extending length bytes from that.
@@ -17,10 +17,10 @@ public class Bytes {
     private boolean isComplete = false;
 
 
-    public BytesAllocatorAutoDefrag byteArrayAllocator = null;
+    public IBytesAllocator byteArrayAllocator = null;
     public ObjectPool objectPool = null;
 
-    public void init(BytesAllocatorAutoDefrag byteArrayAllocator, ObjectPool<Bytes> objectPool){
+    public void init(IBytesAllocator byteArrayAllocator, ObjectPool<Bytes> objectPool){
         this.byteArrayAllocator = byteArrayAllocator;
         this.data               = byteArrayAllocator.getData();
         this.objectPool         = objectPool;
