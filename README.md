@@ -110,6 +110,8 @@ the next section.
 
 | Version | Java Version | Change |
 |---------|--------------|--------|
+| 0.6.2   | Java 8       | Updated Bytes + BytesFactory to use IBytesAllocator instead of ByteAllocatorDefrag. Using IBytesAllocator allows for use of BytesAllocatorManualDefrag too.   |
+| 0.6.0   | Java 8       | IObjectFactory interface instance() method had ObjectPool added as parameter.  |
 | 0.5.1   | Java 8       | First release |
 
 
