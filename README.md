@@ -97,7 +97,7 @@ If you want to use Mem Ops with Maven, the Maven dependency for Mem Ops looks li
     <dependency>
         <groupId>com.nanosai</groupId>
         <artifactId>mem-ops</artifactId>
-        <version>0.5.1</version>
+        <version>0.6.2</version>
     </dependency>
 
 Remember to substitute the version with the version of Mem Ops you want to use. See the Mem Ops version history in
