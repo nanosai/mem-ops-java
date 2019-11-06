@@ -36,6 +36,20 @@ public abstract class BytesAllocatorBase implements IBytesAllocator {
         return this.freeBlockCount;
     }
 
+    public int freeBlockStartIndex(int freeBlockIndex) {
+        long freeBlockDescriptor = this.freeBlocks[freeBlockIndex];
+        long startIndex = freeBlockDescriptor & FROM_AND_MASK;
+        startIndex >>= 32;
+
+        return (int) startIndex;
+    }
+
+    public int freeBlockEndIndex(int freeBlockIndex) {
+        long freeBlockDescriptor = this.freeBlocks[freeBlockIndex];
+        long startIndex = freeBlockDescriptor & TO_AND_MASK;
+        return (int) startIndex;
+    }
+
     public int freeCapacity() {
         int freeCapacity = 0;
         for(int i=0; i<this.freeBlockCount; i++){

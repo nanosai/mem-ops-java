@@ -38,7 +38,10 @@ public class Bytes {
         }
 
         this.startIndex = startIndex;
-        this.length = length;
+        this.length     = length;
+        this.endIndex   = startIndex + length;
+        this.writeIndex = startIndex;
+        this.readIndex  = startIndex;
         return true;
     }
 
