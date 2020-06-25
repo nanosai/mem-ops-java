@@ -1,0 +1,45 @@
+<project name="MyProject" basedir="." >
+
+    <property name="version" value="1.1.1"/>
+    <property name="javahome" value="C:\Program Files\Java\jdk-9.0.4\"/>
+
+    <target name="clean">
+        <!--<delete dir="out-build/java"/>-->
+        <delete dir="out-build"/>
+        <mkdir  dir="out-build"/>
+        <mkdir  dir="out-build/classes"/>
+        <mkdir  dir="out-build/java"/>
+        <mkdir  dir="out-build/java/com.nanosai.memops"/>
+    </target>
+
+    <target name="copy-source" depends="clean">
+        <copydir src="src/main/java"   dest="out-build/java/com.nanosai.memops" />
+        <copy    file="src-module-info/module-info.java" todir="out-build/java/com.nanosai.memops" />
+    </target>
+
+
+    <target name="compile" depends="copy-source">
+        <exec executable="${javahome}\bin\javac" dir="${basedir}">
+            <!--<arg value="C:\Program Files\Java\jdk-9.0.4\bin\jlink"/>-->
+            <arg value="-d"/>
+            <arg value="out-build/classes"/>
+            <arg value="--module-source-path"/>
+            <arg value="out-build/java"/>
+            <arg value="--module"/>
+            <arg value="com.nanosai.memops"/>
+        </exec>
+    </target>
+
+    <target name="package-jar" depends="compile">
+        <exec executable="${javahome}\bin\jar" dir="${basedir}">
+            <!--<arg value="C:\Program Files\Java\jdk-9.0.4\bin\jlink"/>-->
+            <arg value="-c"/>
+            <arg value="--file=out-build/com-nanosai-memops.jar"/>
+            <arg value="-C"/>
+            <arg value="out-build/classes/com.nanosai.memops"/>
+            <arg value="."/>
+            <!-- jar -c  - -file=out-jar/com-jenkov-mymodule.jar -C out/com.jenkov.mymodule . -->
+        </exec>
+    </target>
+
+</project>

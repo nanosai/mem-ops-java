@@ -97,7 +97,7 @@ If you want to use Mem Ops with Maven, the Maven dependency for Mem Ops looks li
     <dependency>
         <groupId>com.nanosai</groupId>
         <artifactId>mem-ops</artifactId>
-        <version>0.6.4</version>
+        <version>0.7.1</version>
     </dependency>
 
 Remember to substitute the version with the version of Mem Ops you want to use. See the Mem Ops version history in
@@ -110,6 +110,7 @@ the next section.
 
 | Version | Java Version | Change |
 |---------|--------------|--------|
+| 0.7.1   | Java 8       | Ant script added that can build a Java JPMS module for Mem Ops. No functional changes otherwise.   |
 | 0.6.4   | Java 8       | Fixed a small bug in Bytes.allocate(), so all indexes are now set / reset correctly after allocation.   |
 | 0.6.2   | Java 8       | Updated Bytes + BytesFactory to use IBytesAllocator instead of ByteAllocatorDefrag. Using IBytesAllocator allows for use of BytesAllocatorManualDefrag too.   |
 | 0.6.0   | Java 8       | IObjectFactory interface instance() method had ObjectPool added as parameter.  |
